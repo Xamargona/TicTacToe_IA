@@ -5,6 +5,7 @@ interface SquareProps {
   values: string | null;
   onClick: () => void;
   style?: React.CSSProperties;
+  id?: string;
 }
 
 const Square: React.FC<SquareProps> = ({ values, onClick, style }) => {

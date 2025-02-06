@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Square from "./Square/Square";
 import ResetButton from "./ResetButton/ResetButton";
+import WebCam from "../../extra/Webcam.jsx";
 import "./Board.css";
 
 const Board = () => {
@@ -13,19 +14,17 @@ const Board = () => {
     // Verificamos respuesta
     const status = winner === "X" ? "Player" : winner === "O" ? "IA" : "Draw";
 
-    // Player turn
     const handleClick = (i: number) => {
+        alert("handleClick");
         if (nextValue === "X" && winner === null && squares[i] === null) {
             const squaresCopy = [...squares];
             squaresCopy[i] = nextValue;
             setSquares(squaresCopy);
             setXIsNext(!xIsNext);
-
-            return;
-        } 
+        }
     }
 
-    // IA turn
+    // Function for IA turn with delay
     const iaTurn = () => {
         setTimeout(() => {
             const emptyCells = squares.map((value, index) => value === null ? index : null).filter(val => val !== null);
@@ -36,18 +35,17 @@ const Board = () => {
                 setSquares(squaresCopy);
                 setXIsNext(!xIsNext);
             }
-        }, 600);
+        }, 600); 
     }
-    
+
     useEffect(() => {
         if (nextValue === "O" && !winner) {
             iaTurn();
         }
     }, [squares, nextValue, winner]);
 
-
     const renderSquare = (i: number) => {
-        let backgroundColor;
+        let backgroundColor = '';
         if (winner === "X" && winningSquares.includes(i)) {
             backgroundColor = 'rgb(156, 227, 125)';
         } else if (winner === "O" && winningSquares.includes(i)) {
@@ -60,6 +58,7 @@ const Board = () => {
                 values={squares[i]}
                 onClick={() => handleClick(i)}
                 style={{ backgroundColor }}
+                id={`square-${i}`}
             />
         );
     }
@@ -68,21 +67,30 @@ const Board = () => {
         setSquares(Array(9).fill(null));
         setXIsNext(true);
     }
-    
+
+    const handleSquareDetected = (squareId: string | null) => {
+        if (squareId) {
+            const index = parseInt(squareId.replace('square-', ''), 10);
+            if (!isNaN(index)) {
+                handleClick(index);
+            }
+        }
+    }
+
     return (
         <>
-            <div className="board">
-                    {renderSquare(0)}
-                    {renderSquare(1)}
-                    {renderSquare(2)}
-                    {renderSquare(3)}
-                    {renderSquare(4)}
-                    {renderSquare(5)}
-                    {renderSquare(6)}
-                    {renderSquare(7)}
-                    {renderSquare(8)}
+            <WebCam onSquareDetected={handleSquareDetected} />
+            <div className="board" id="video-target">
+                {renderSquare(0)}
+                {renderSquare(1)}
+                {renderSquare(2)}
+                {renderSquare(3)}
+                {renderSquare(4)}
+                {renderSquare(5)}
+                {renderSquare(6)}
+                {renderSquare(7)}
+                {renderSquare(8)}
             </div>
-            <ResetButton onClick={resetGame} label={"Restart"} /> {}
             <div className="status">
                 {winner !== null ? (
                     winner !== "Draw" ? (
@@ -96,6 +104,7 @@ const Board = () => {
                     )
                 ) : null}
             </div>
+            <ResetButton onClick={resetGame} label="Restart" />
         </>
     );
 
