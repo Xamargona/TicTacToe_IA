@@ -15,7 +15,6 @@ const Board = () => {
     const status = winner === "X" ? "Player" : winner === "O" ? "IA" : "Draw";
 
     const handleClick = (i: number) => {
-        alert("handleClick");
         if (nextValue === "X" && winner === null && squares[i] === null) {
             const squaresCopy = [...squares];
             squaresCopy[i] = nextValue;
