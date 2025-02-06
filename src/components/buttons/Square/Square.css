@@ -1,0 +1,15 @@
+
+.square {
+    height: 100px;
+    width: 100px;
+    border-radius: 8%;
+    border: 2px solid rgb(151, 146, 227);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    background-color:azure;
+}
+
+.square:hover {
+    background-color: rgb(255, 165, 62);
+    transform: scale(.8);
+}
